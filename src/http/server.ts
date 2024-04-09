@@ -1,3 +1,5 @@
+import "dotenv/config";
+
 import fastify from "fastify";
 import fastifyCookie from "@fastify/cookie";
 import fastifyCors from "@fastify/cors";
@@ -29,6 +31,8 @@ app.register(getPoll);
 app.register(voteOnPoll);
 app.register(pollResults);
 
-app.listen({ port: 3333 }).then(() => {
-  console.log("HTTP Server is running!");
-});
+app
+  .listen({ port: Number(process.env.PORT || 3333), host: "0.0.0.0" })
+  .then(() => {
+    console.log("HTTP Server is running!");
+  });
