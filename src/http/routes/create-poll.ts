@@ -6,29 +6,37 @@ export async function createPoll(app: FastifyInstance) {
   app.post("/polls", async (request, reply) => {
     const createPollBody = z.object({
       title: z.string(),
-      options: z.array(z.string()),
+      options: z.array(
+        z.object({
+          option: z.string(),
+        })
+      ),
     });
 
     const { title, options } = createPollBody.parse(request.body);
 
-    const poll = await prisma.poll.create({
-      data: {
-        title,
-        options: {
-          createMany: {
-            data: options.map((option) => {
-              return {
-                title: option,
-              };
-            }),
+    try {
+      const poll = await prisma.poll.create({
+        data: {
+          title,
+          options: {
+            createMany: {
+              data: options.map(({ option }) => {
+                return {
+                  title: option,
+                };
+              }),
+            },
           },
         },
-      },
-      include: {
-        options: true,
-      },
-    });
+        include: {
+          options: true,
+        },
+      });
 
-    return reply.status(201).send({ pollId: poll.id });
+      return reply.status(201).send({ pollId: poll.id });
+    } catch (error) {
+      console.log(error);
+    }
   });
 }
