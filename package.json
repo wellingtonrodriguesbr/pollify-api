@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsup src --out-dir build",
     "dev": "tsx watch src/http/server.ts",
-    "start": "node build/server.js"
+    "start": "node build/http/server.js"
   },
   "keywords": [],
   "author": "",
