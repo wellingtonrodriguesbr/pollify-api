@@ -14,12 +14,12 @@ import { fetchPolls } from "./routes/fetch-polls";
 const app = fastify();
 
 app.register(fastifyCookie, {
-  secret: "my-super-secret-key",
+  secret: process.env.COOKIE_SECRET_KEY,
   hook: "onRequest",
 });
 
 app.register(fastifyCors, {
-  origin: "*",
+  origin: process.env.CORS_ORIGIN_URL,
   credentials: true,
 });
 
