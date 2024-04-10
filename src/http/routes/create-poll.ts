@@ -1,9 +1,10 @@
 import { FastifyInstance } from "fastify";
 import { prisma } from "../../lib/prisma";
 import { z } from "zod";
+import { verifyJWT } from "../middlewares/verify-jwt";
 
 export async function createPoll(app: FastifyInstance) {
-  app.post("/polls", async (request, reply) => {
+  app.post("/polls", { onRequest: [verifyJWT] }, async (request, reply) => {
     const createPollBody = z.object({
       title: z.string(),
       options: z.array(
@@ -18,6 +19,7 @@ export async function createPoll(app: FastifyInstance) {
     try {
       const poll = await prisma.poll.create({
         data: {
+          userId: request.user.sub,
           title,
           options: {
             createMany: {

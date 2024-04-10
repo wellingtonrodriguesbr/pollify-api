@@ -3,6 +3,7 @@ import "dotenv/config";
 import fastify from "fastify";
 import fastifyCookie from "@fastify/cookie";
 import fastifyCors from "@fastify/cors";
+import fastifyJwt from "@fastify/jwt";
 import fastifyWebsocket from "@fastify/websocket";
 
 import { createPoll } from "./routes/create-poll";
@@ -10,8 +11,20 @@ import { getPoll } from "./routes/get-poll";
 import { voteOnPoll } from "./routes/vote-on-poll";
 import { pollResults } from "./ws/poll-results";
 import { fetchPolls } from "./routes/fetch-polls";
+import { registerUser } from "./routes/register-user";
 
 const app = fastify();
+
+app.register(fastifyJwt, {
+  secret: process.env.JWT_SECRET!,
+  cookie: {
+    cookieName: "refreshToken",
+    signed: false,
+  },
+  sign: {
+    expiresIn: "10m",
+  },
+});
 
 app.register(fastifyCookie, {
   secret: process.env.COOKIE_SECRET_KEY,
@@ -30,6 +43,7 @@ app.register(createPoll);
 app.register(getPoll);
 app.register(voteOnPoll);
 app.register(pollResults);
+app.register(registerUser);
 
 app
   .listen({ port: Number(process.env.PORT || 3333), host: "0.0.0.0" })
