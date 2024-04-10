@@ -1,18 +1,20 @@
 import { FastifyInstance } from "fastify";
 import { prisma } from "../../lib/prisma";
 import { z } from "zod";
-import { hash } from "bcryptjs";
+import { generateRamdonCode } from "@/utils/generate-random-code";
+import { resend } from "@/mail/client";
+
+import AuthenticationMagicLinkEmail from "@/mail/templates/authentication-magic-link";
 
 export async function registerUser(app: FastifyInstance) {
   app.post("/users", async (request, reply) => {
     const registerUserBody = z.object({
       name: z.string(),
       email: z.string().email(),
-      password: z.string().min(6),
+      phone: z.string(),
     });
 
-    const { name, email, password } = registerUserBody.parse(request.body);
-    const password_hash = await hash(password, 6);
+    const { name, email, phone } = registerUserBody.parse(request.body);
 
     const userWithSameEmail = await prisma.user.findUnique({
       where: {
@@ -29,7 +31,28 @@ export async function registerUser(app: FastifyInstance) {
         data: {
           name,
           email,
-          passwordHash: password_hash,
+          phone,
+          status: "PENDING",
+        },
+      });
+
+      const code: string = generateRamdonCode();
+      const link = `${process.env.WEBSITE_DOMAIN_URL}/entrar?codigo=${code}`;
+
+      await resend.emails.send({
+        from: process.env.SENDER_EMAIL!,
+        to: [email],
+        subject: "Registro na plataforma",
+        react: AuthenticationMagicLinkEmail({
+          userEmail: email,
+          authLink: link,
+        }),
+      });
+
+      await prisma.authLink.create({
+        data: {
+          code,
+          userId: user.id,
         },
       });
 

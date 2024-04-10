@@ -8,22 +8,42 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(uuid())
-  name         String
-  email        String   @unique
-  passwordHash String
-  createdAt    DateTime @default(now())
-  polls        Poll[]
+  id        String     @id @default(uuid())
+  name      String
+  email     String     @unique
+  phone     String     @unique
+  status    UserStatus
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime?  @map("updated_at")
+
+  authLinks AuthLink[]
+  polls     Poll[]
 
   @@map("users")
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+}
+
+model AuthLink {
+  id        String   @id @default(uuid())
+  code      String   @unique
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("auth.links")
 }
 
 model Poll {
   id        String   @id @default(uuid())
   title     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  userId    String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+  userId    String   @map("user_id")
 
   user    User         @relation(fields: [userId], references: [id])
   options PollOption[]
@@ -33,7 +53,7 @@ model Poll {
 model PollOption {
   id     String @id @default(uuid())
   title  String
-  pollId String
+  pollId String @map("poll_id")
 
   votes Vote[]
   poll  Poll   @relation(fields: [pollId], references: [id])
@@ -41,10 +61,10 @@ model PollOption {
 
 model Vote {
   id           Int      @id @default(autoincrement())
-  sessionId    String
-  pollOptionId String
-  pollId       String
-  createdAt    DateTime @default(now())
+  sessionId    String   @map("session_id")
+  pollOptionId String   @map("poll_option_id")
+  pollId       String   @map("poll_id")
+  createdAt    DateTime @default(now()) @map("created_at")
 
   option PollOption @relation(fields: [pollOptionId], references: [id])
   poll   Poll       @relation(fields: [pollId], references: [id])
