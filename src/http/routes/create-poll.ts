@@ -19,7 +19,7 @@ export async function createPoll(app: FastifyInstance) {
     try {
       const poll = await prisma.poll.create({
         data: {
-          userId: request.user.sub,
+          userId: request.user.sign.sub,
           title,
           options: {
             createMany: {

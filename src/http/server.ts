@@ -12,6 +12,8 @@ import { voteOnPoll } from "./routes/vote-on-poll";
 import { pollResults } from "./ws/poll-results";
 import { fetchPolls } from "./routes/fetch-polls";
 import { registerUser } from "./routes/register-user";
+import { authenticate } from "./routes/authenticate";
+import { submitMagicLink } from "./routes/submit-magic-link";
 
 const app = fastify();
 
@@ -44,6 +46,8 @@ app.register(getPoll);
 app.register(voteOnPoll);
 app.register(pollResults);
 app.register(registerUser);
+app.register(authenticate);
+app.register(submitMagicLink);
 
 app
   .listen({ port: Number(process.env.PORT || 3333), host: "0.0.0.0" })

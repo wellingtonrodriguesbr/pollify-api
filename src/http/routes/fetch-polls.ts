@@ -6,7 +6,7 @@ export async function fetchPolls(app: FastifyInstance) {
   app.get("/polls", { onRequest: [verifyJWT] }, async (request, reply) => {
     const polls = await prisma.poll.findMany({
       where: {
-        userId: request.user.sub,
+        userId: request.user.sign.sub,
       },
     });
 

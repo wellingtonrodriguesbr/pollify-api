@@ -1,43 +1,63 @@
 import { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { prisma } from "../../lib/prisma";
-import { compare } from "bcryptjs";
+
+import dayjs from "dayjs";
 
 export async function authenticate(app: FastifyInstance) {
-  app.post("/sessions", async (request, reply) => {
+  app.get("/sessions", async (request, reply) => {
     const authenticateBody = z.object({
-      email: z.string().email(),
-      password: z.string().min(6),
+      code: z.string(),
     });
 
-    const { email, password } = authenticateBody.parse(request.body);
+    const { code } = authenticateBody.parse(request.query);
 
-    const user = await prisma.user.findUnique({
+    const authLinkFromCode = await prisma.authLink.findUnique({
       where: {
-        email,
+        code,
+      },
+      include: {
+        user: true,
       },
     });
 
-    if (!user) {
-      throw new Error("User not found!");
+    if (!authLinkFromCode) {
+      return reply
+        .status(404)
+        .send({ message: "No authentication link with this code was found" });
     }
 
-    const doesPasswordMatches = await compare(password, user.passwordHash);
-
-    if (!doesPasswordMatches) {
-      throw new Error("Invalid credentials");
+    if (dayjs().diff(authLinkFromCode.createdAt, "days") > 7) {
+      throw new Error("This authentication code is expired");
     }
+
+    await prisma.authLink.delete({
+      where: {
+        code,
+      },
+    });
+
+    const { id } = await prisma.user.update({
+      where: {
+        id: authLinkFromCode.userId,
+      },
+      data: {
+        status: "ACTIVE",
+      },
+    });
+
+    console.log(id);
 
     try {
       const token = await reply.jwtSign({
         sign: {
-          sub: user.id,
+          sub: id,
         },
       });
 
       const refreskToken = await reply.jwtSign({
         sign: {
-          sub: user.id,
+          sub: id,
           expiresIn: "7d",
         },
       });
