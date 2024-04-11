@@ -14,6 +14,7 @@ import { fetchPolls } from "./routes/fetch-polls";
 import { registerUser } from "./routes/register-user";
 import { authenticate } from "./routes/authenticate";
 import { submitMagicLink } from "./routes/submit-magic-link";
+import { refresh } from "./routes/refresh";
 
 const app = fastify();
 
@@ -24,7 +25,7 @@ app.register(fastifyJwt, {
     signed: false,
   },
   sign: {
-    expiresIn: "10m",
+    expiresIn: "7d",
   },
 });
 
@@ -48,6 +49,7 @@ app.register(pollResults);
 app.register(registerUser);
 app.register(authenticate);
 app.register(submitMagicLink);
+app.register(refresh);
 
 app
   .listen({ port: Number(process.env.PORT || 3333), host: "0.0.0.0" })

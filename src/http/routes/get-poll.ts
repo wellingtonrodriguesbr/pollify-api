@@ -17,6 +17,7 @@ export async function getPoll(app: FastifyInstance) {
 
       const poll = await prisma.poll.findUnique({
         where: {
+          userId: request.user.sign.sub,
           id: pollId,
         },
         include: {

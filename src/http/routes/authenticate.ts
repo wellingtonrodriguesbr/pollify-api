@@ -37,7 +37,7 @@ export async function authenticate(app: FastifyInstance) {
       },
     });
 
-    const { id } = await prisma.user.update({
+    const { id, email } = await prisma.user.update({
       where: {
         id: authLinkFromCode.userId,
       },
@@ -46,21 +46,25 @@ export async function authenticate(app: FastifyInstance) {
       },
     });
 
-    console.log(id);
-
     try {
-      const token = await reply.jwtSign({
-        sign: {
-          sub: id,
-        },
-      });
+      const token = await reply.jwtSign(
+        {},
+        {
+          sign: {
+            sub: id,
+            expiresIn: "10m",
+          },
+        }
+      );
 
-      const refreskToken = await reply.jwtSign({
-        sign: {
-          sub: id,
-          expiresIn: "7d",
-        },
-      });
+      const refreskToken = await reply.jwtSign(
+        {},
+        {
+          sign: {
+            sub: id,
+          },
+        }
+      );
 
       reply
         .setCookie("refreshToken", refreskToken, {
@@ -73,11 +77,9 @@ export async function authenticate(app: FastifyInstance) {
         .send({ token });
     } catch (error) {
       if (error) {
-        return reply.status(400).send({ message: "Invalid credentials" });
+        return reply.status(401).send({ message: "Invalid credentials" });
       }
       throw error;
     }
-
-    return reply.status(200).send();
   });
 }
