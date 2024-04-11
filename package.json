@@ -2,9 +2,9 @@
   "name": "pollify-api",
   "version": "1.0.0",
   "description": "",
-  "main": "server.cjs",
+  "main": "server.js",
   "scripts": {
-    "build": "tsup src --out-dir src/build",
+    "build": "tsup src --out-dir build",
     "dev": "tsx watch src/http/server.ts",
     "start": "node build/http/server.js",
     "email:dev": "email dev --dir src/mail"
