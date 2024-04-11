@@ -16,7 +16,7 @@ export async function registerUser(app: FastifyInstance) {
 
     const { name, email, phone } = registerUserBody.parse(request.body);
 
-    const userWithSameEmail = await prisma.user.findUnique({
+    const userWithSameEmail = await prisma.user.findFirst({
       where: {
         email,
       },
