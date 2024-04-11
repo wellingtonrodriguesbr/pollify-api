@@ -16,15 +16,17 @@ export async function registerUser(app: FastifyInstance) {
 
     const { name, email, phone } = registerUserBody.parse(request.body);
 
-    const userWithSameEmail = await prisma.user.findFirst({
-      where: {
-        email,
-      },
-    });
+    // const userWithSameEmail = await prisma.user.findUnique({
+    //   where: {
+    //     email,
+    //   },
+    // });
 
-    if (userWithSameEmail) {
-      return reply.status(400).send({ message: "User already exists!" });
-    }
+    // console.log(userWithSameEmail);
+
+    // if (userWithSameEmail) {
+    //   return reply.status(400).send({ message: "User already exists!" });
+    // }
 
     try {
       const user = await prisma.user.create({
