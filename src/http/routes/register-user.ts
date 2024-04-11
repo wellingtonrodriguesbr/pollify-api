@@ -39,15 +39,15 @@ export async function registerUser(app: FastifyInstance) {
       const code: string = generateRamdonCode();
       const link = `${process.env.WEBSITE_DOMAIN_URL}/entrar?codigo=${code}`;
 
-      // await resend.emails.send({
-      //   from: process.env.SENDER_EMAIL!,
-      //   to: [email],
-      //   subject: "Registro na plataforma",
-      //   react: AuthenticationMagicLinkEmail({
-      //     userEmail: email,
-      //     authLink: link,
-      //   }),
-      // });
+      await resend.emails.send({
+        from: process.env.SENDER_EMAIL!,
+        to: [email],
+        subject: "Registro na plataforma",
+        react: AuthenticationMagicLinkEmail({
+          userEmail: email,
+          authLink: link,
+        }),
+      });
 
       await prisma.authLink.create({
         data: {
