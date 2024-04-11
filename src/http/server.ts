@@ -15,6 +15,7 @@ import { registerUser } from "./routes/register-user";
 import { authenticate } from "./routes/authenticate";
 import { submitMagicLink } from "./routes/submit-magic-link";
 import { refresh } from "./routes/refresh";
+import { getProfile } from "./routes/get-profile";
 
 const app = fastify();
 
@@ -50,6 +51,7 @@ app.register(registerUser);
 app.register(authenticate);
 app.register(submitMagicLink);
 app.register(refresh);
+app.register(getProfile);
 
 app
   .listen({ port: Number(process.env.PORT || 3333), host: "0.0.0.0" })

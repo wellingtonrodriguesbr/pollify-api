@@ -20,7 +20,7 @@ export async function submitMagicLink(app: FastifyInstance) {
       },
     });
 
-    if (user) {
+    if (!user) {
       throw new Error("User not found!");
     }
 
