@@ -23,7 +23,7 @@ export async function registerUser(app: FastifyInstance) {
     });
 
     if (userWithSameEmail) {
-      throw new Error("User already exists!");
+      return reply.status(400).send({ message: "User already exists!" });
     }
 
     try {
