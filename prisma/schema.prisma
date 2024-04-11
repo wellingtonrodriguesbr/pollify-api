@@ -35,7 +35,7 @@ model AuthLink {
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now()) @map("created_at")
 
-  @@map("auth.links")
+  @@map("auth_links")
 }
 
 model Poll {
@@ -48,6 +48,8 @@ model Poll {
   user    User         @relation(fields: [userId], references: [id])
   options PollOption[]
   votes   Vote[]
+
+  @@map("polls")
 }
 
 model PollOption {
@@ -57,6 +59,8 @@ model PollOption {
 
   votes Vote[]
   poll  Poll   @relation(fields: [pollId], references: [id])
+
+  @@map("poll_options")
 }
 
 model Vote {
@@ -70,4 +74,5 @@ model Vote {
   poll   Poll       @relation(fields: [pollId], references: [id])
 
   @@unique([sessionId, pollId])
+  @@map("votes")
 }

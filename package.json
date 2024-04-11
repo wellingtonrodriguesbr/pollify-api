@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.cjs",
-  "type": "module",
   "scripts": {
     "build": "tsup src --out-dir src/build",
     "dev": "tsx watch src/http/server.ts",

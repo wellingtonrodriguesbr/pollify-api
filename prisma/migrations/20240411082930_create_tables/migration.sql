@@ -15,44 +15,44 @@ CREATE TABLE "users" (
 );
 
 -- CreateTable
-CREATE TABLE "auth.links" (
+CREATE TABLE "auth_links" (
     "id" TEXT NOT NULL,
     "code" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "auth.links_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "auth_links_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Poll" (
+CREATE TABLE "polls" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "user_id" TEXT NOT NULL,
 
-    CONSTRAINT "Poll_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "polls_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "PollOption" (
+CREATE TABLE "poll_options" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "poll_id" TEXT NOT NULL,
 
-    CONSTRAINT "PollOption_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "poll_options_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Vote" (
+CREATE TABLE "votes" (
     "id" SERIAL NOT NULL,
     "session_id" TEXT NOT NULL,
     "poll_option_id" TEXT NOT NULL,
     "poll_id" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "Vote_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "votes_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -62,22 +62,22 @@ CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 CREATE UNIQUE INDEX "users_phone_key" ON "users"("phone");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "auth.links_code_key" ON "auth.links"("code");
+CREATE UNIQUE INDEX "auth_links_code_key" ON "auth_links"("code");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Vote_session_id_poll_id_key" ON "Vote"("session_id", "poll_id");
+CREATE UNIQUE INDEX "votes_session_id_poll_id_key" ON "votes"("session_id", "poll_id");
 
 -- AddForeignKey
-ALTER TABLE "auth.links" ADD CONSTRAINT "auth.links_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "auth_links" ADD CONSTRAINT "auth_links_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Poll" ADD CONSTRAINT "Poll_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "polls" ADD CONSTRAINT "polls_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PollOption" ADD CONSTRAINT "PollOption_poll_id_fkey" FOREIGN KEY ("poll_id") REFERENCES "Poll"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "poll_options" ADD CONSTRAINT "poll_options_poll_id_fkey" FOREIGN KEY ("poll_id") REFERENCES "polls"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Vote" ADD CONSTRAINT "Vote_poll_option_id_fkey" FOREIGN KEY ("poll_option_id") REFERENCES "PollOption"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "votes" ADD CONSTRAINT "votes_poll_option_id_fkey" FOREIGN KEY ("poll_option_id") REFERENCES "poll_options"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Vote" ADD CONSTRAINT "Vote_poll_id_fkey" FOREIGN KEY ("poll_id") REFERENCES "Poll"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "votes" ADD CONSTRAINT "votes_poll_id_fkey" FOREIGN KEY ("poll_id") REFERENCES "polls"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
