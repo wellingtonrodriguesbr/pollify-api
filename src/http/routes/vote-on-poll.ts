@@ -1,9 +1,8 @@
-import { FastifyInstance } from "fastify";
-import { prisma } from "../../lib/prisma";
-import { redis } from "../../lib/redis";
-import { randomUUID } from "node:crypto";
-
 import { z } from "zod";
+import { randomUUID } from "node:crypto";
+import { prisma } from "../../lib/prisma";
+import { FastifyInstance } from "fastify";
+import { redis } from "../../lib/redis";
 import { voting } from "../../utils/voting-pub-sub";
 
 export async function voteOnPoll(app: FastifyInstance) {
@@ -21,6 +20,8 @@ export async function voteOnPoll(app: FastifyInstance) {
 
     let { sessionId } = request.cookies;
 
+    console.log(sessionId);
+
     if (sessionId) {
       const userPreviousVoteOnPoll = await prisma.vote.findUnique({
         where: {
@@ -33,11 +34,11 @@ export async function voteOnPoll(app: FastifyInstance) {
 
       if (
         userPreviousVoteOnPoll &&
-        userPreviousVoteOnPoll?.pollOptionId !== pollOptionId
+        userPreviousVoteOnPoll.pollOptionId !== pollOptionId
       ) {
         await prisma.vote.delete({
           where: {
-            id: userPreviousVoteOnPoll?.id,
+            id: userPreviousVoteOnPoll.id,
           },
         });
 
@@ -46,21 +47,22 @@ export async function voteOnPoll(app: FastifyInstance) {
           -1,
           userPreviousVoteOnPoll.pollOptionId
         );
+
         voting.publish(pollId, {
           pollOptionId: userPreviousVoteOnPoll.pollOptionId,
           votes: Number(votes),
         });
       } else if (userPreviousVoteOnPoll) {
-        reply
+        return reply
           .status(400)
-          .send({ message: "You have already voted on this poll." });
+          .send({ message: "You have already voted on this poll" });
       }
     }
 
     if (!sessionId) {
       sessionId = randomUUID();
 
-      reply.setCookie("polls:sessionId", sessionId, {
+      reply.setCookie("sessionId", sessionId, {
         path: "/",
         maxAge: 60 * 60 * 24 * 30, // 30 days
         signed: true,
