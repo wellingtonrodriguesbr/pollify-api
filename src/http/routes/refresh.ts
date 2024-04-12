@@ -28,6 +28,7 @@ export async function refresh(app: FastifyInstance) {
         path: "/",
         secure: true,
         sameSite: true,
+        domain: "pollify.app",
         httpOnly: true,
       })
       .status(200)

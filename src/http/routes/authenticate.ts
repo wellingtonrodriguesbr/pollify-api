@@ -70,6 +70,7 @@ export async function authenticate(app: FastifyInstance) {
         .setCookie("refreshToken", refreskToken, {
           path: "/",
           secure: true,
+          domain: "pollify.app",
           sameSite: true,
           httpOnly: true,
         })
