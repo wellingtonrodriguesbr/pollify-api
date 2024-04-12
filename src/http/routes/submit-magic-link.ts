@@ -21,12 +21,12 @@ export async function submitMagicLink(app: FastifyInstance) {
     });
 
     if (!user) {
-      throw new Error("User not found!");
+      return reply.status(404).send({ message: "User not found!" });
     }
 
     try {
       const code: string = generateRamdonCode();
-      const link = `${process.env.WEBSITE_DOMAIN_URL}/entrar?codigo=${code}`;
+      const link = `${process.env.WEBSITE_DOMAIN_URL}/autenticacao?codigo=${code}`;
 
       await resend.emails.send({
         from: process.env.SENDER_EMAIL!,

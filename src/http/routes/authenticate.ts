@@ -37,7 +37,7 @@ export async function authenticate(app: FastifyInstance) {
       },
     });
 
-    const { id, email } = await prisma.user.update({
+    const { id } = await prisma.user.update({
       where: {
         id: authLinkFromCode.userId,
       },

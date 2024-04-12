@@ -37,7 +37,7 @@ export async function registerUser(app: FastifyInstance) {
       });
 
       const code: string = generateRamdonCode();
-      const link = `${process.env.WEBSITE_DOMAIN_URL}/entrar?codigo=${code}`;
+      const link = `${process.env.WEBSITE_DOMAIN_URL}/autenticacao?codigo=${code}`;
 
       await resend.emails.send({
         from: process.env.SENDER_EMAIL!,
