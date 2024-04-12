@@ -70,7 +70,7 @@ export async function authenticate(app: FastifyInstance) {
         .setCookie("refreshToken", refreskToken, {
           path: "/",
           secure: true,
-          sameSite: "none",
+          sameSite: true,
           httpOnly: true,
         })
         .status(200)
