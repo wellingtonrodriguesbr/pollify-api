@@ -29,7 +29,7 @@ export async function refresh(app: FastifyInstance) {
         path: "/",
         secure: true,
         sameSite: true,
-        domain: "pollify.app",
+        domain: process.env.COOKIES_DOMAIN,
         httpOnly: true,
         expires: dayjs().add(7, "day").toDate(),
       })

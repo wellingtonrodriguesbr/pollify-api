@@ -70,7 +70,7 @@ export async function authenticate(app: FastifyInstance) {
         .setCookie("refreshToken", refreskToken, {
           path: "/",
           secure: true,
-          domain: "pollify.app",
+          domain: process.env.COOKIES_DOMAIN,
           sameSite: true,
           httpOnly: true,
           expires: dayjs().add(7, "day").toDate(),
