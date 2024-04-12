@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { FastifyInstance } from "fastify";
 
 export async function refresh(app: FastifyInstance) {
@@ -30,6 +31,7 @@ export async function refresh(app: FastifyInstance) {
         sameSite: true,
         domain: "pollify.app",
         httpOnly: true,
+        expires: dayjs().add(7, "day").toDate(),
       })
       .status(200)
       .send({ token });

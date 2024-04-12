@@ -73,6 +73,7 @@ export async function authenticate(app: FastifyInstance) {
           domain: "pollify.app",
           sameSite: true,
           httpOnly: true,
+          expires: dayjs().add(7, "day").toDate(),
         })
         .status(200)
         .send({ token });
