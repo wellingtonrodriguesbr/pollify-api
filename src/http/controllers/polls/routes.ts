@@ -4,11 +4,11 @@ import { verifyJWT } from "@/http/middlewares/verify-jwt";
 import { createPollController } from "./create-poll-controller";
 import { fetchPollsController } from "./fetch-polls-controller";
 import { getPollController } from "./get-poll-controller";
+import { voteOnPollController } from "./vote-on-poll-controller";
 
 export async function pollsRoutes(app: FastifyInstance) {
-  app.addHook("onRequest", verifyJWT);
-
-  app.post("/polls", createPollController);
-  app.get("/polls", fetchPollsController);
-  app.get("/polls/:pollId", getPollController);
+  app.post("/polls", { onRequest: [verifyJWT] }, createPollController);
+  app.post("/polls/:pollId/votes", voteOnPollController);
+  app.get("/polls", { onRequest: [verifyJWT] }, fetchPollsController);
+  app.get("/polls/:pollId", { onRequest: [verifyJWT] }, getPollController);
 }

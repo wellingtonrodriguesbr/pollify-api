@@ -6,7 +6,6 @@ import fastifyCors from "@fastify/cors";
 import fastifyJwt from "@fastify/jwt";
 import fastifyWebsocket from "@fastify/websocket";
 
-import { voteOnPoll } from "./routes/vote-on-poll";
 import { pollResults } from "./ws/poll-results";
 import { pollsRoutes } from "./controllers/polls/routes";
 import { usersRoutes } from "./controllers/users/routes";
@@ -41,5 +40,4 @@ app.register(fastifyWebsocket);
 app.register(pollsRoutes);
 app.register(usersRoutes);
 
-app.register(voteOnPoll);
 app.register(pollResults);
