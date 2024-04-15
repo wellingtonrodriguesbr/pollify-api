@@ -15,7 +15,7 @@ interface Poll {
 }
 
 interface GetPollUseCaseRequest {
-  userId: string;
+  // userId: string;
   pollId: string;
 }
 
@@ -24,12 +24,12 @@ interface GetPollUseCaseResponse {
 }
 
 export async function getPollUseCase({
-  userId,
+  // userId,
   pollId,
 }: GetPollUseCaseRequest): Promise<GetPollUseCaseResponse> {
   const poll = await prisma.poll.findUnique({
     where: {
-      userId,
+      // userId,
       id: pollId,
     },
     include: {

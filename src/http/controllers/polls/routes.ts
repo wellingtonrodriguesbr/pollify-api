@@ -10,5 +10,5 @@ export async function pollsRoutes(app: FastifyInstance) {
   app.post("/polls", { onRequest: [verifyJWT] }, createPollController);
   app.post("/polls/:pollId/votes", voteOnPollController);
   app.get("/polls", { onRequest: [verifyJWT] }, fetchPollsController);
-  app.get("/polls/:pollId", { onRequest: [verifyJWT] }, getPollController);
+  app.get("/polls/:pollId", getPollController);
 }

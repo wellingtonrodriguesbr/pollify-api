@@ -14,7 +14,7 @@ export async function getPollController(
 
   try {
     const { poll } = await getPollUseCase({
-      userId: req.user.sub,
+      // userId: req.user.sub,
       pollId,
     });
 
