@@ -48,21 +48,15 @@ export async function getPollUseCase({
 
   const result = await redis.zrange(pollId, 0, -1, "WITHSCORES");
 
-  console.log("result", result);
-
   const votes = result.reduce((acc, currentValue, index) => {
     if (index % 2 === 0) {
       const score = result[index + 1];
-
-      console.log("score", score);
 
       Object.assign(acc, { [currentValue]: Number(score) });
     }
 
     return acc;
   }, {} as Record<string, number>);
-
-  console.log("votes", votes);
 
   return {
     poll: {
