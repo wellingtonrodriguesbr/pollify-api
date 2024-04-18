@@ -13,7 +13,9 @@ export async function authenticateController(
     code: z.string(),
   });
 
-  const { code } = authenticateBodySchema.parse(req.body);
+  const { code } = authenticateBodySchema.parse(req.query);
+
+  console.log("CODE:", code);
 
   try {
     const { user } = await authenticateUseCase({ code });
