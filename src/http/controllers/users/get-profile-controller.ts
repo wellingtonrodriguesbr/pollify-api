@@ -13,5 +13,6 @@ export async function getProfileController(
     return reply.status(200).send({ user });
   } catch (error) {
     console.log(error);
+    return reply.status(404).send({ message: "Profile not found" });
   }
 }

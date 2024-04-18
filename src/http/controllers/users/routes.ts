@@ -10,7 +10,7 @@ import { refreshController } from "./refresh";
 export async function usersRoutes(app: FastifyInstance) {
   app.post("/users", registerController);
   app.post("/sessions", authenticateController);
-  app.post("/token/refresh", refreshController);
+  app.patch("/token/refresh", refreshController);
   app.post("/sessions/submit-magic-link", submitMagiclinkController);
 
   app.get("/me", { onRequest: [verifyJWT] }, getProfileController);

@@ -15,8 +15,6 @@ export async function authenticateController(
 
   const { code } = authenticateBodySchema.parse(req.query);
 
-  console.log("CODE:", code);
-
   try {
     const { user } = await authenticateUseCase({ code });
 
