@@ -8,7 +8,21 @@ export async function signOutController(
   await req.jwtVerify({ onlyCookie: true });
 
   try {
-    return reply.clearCookie("refreshToken").send({ success: true });
+    reply.clearCookie("refreshToken", {
+      path: "/",
+      domain: process.env.COOKIES_DOMAIN,
+    });
+    await reply.jwtSign(
+      {},
+      {
+        sign: {
+          sub: req.user.sub,
+          expiresIn: 3,
+        },
+      }
+    );
+
+    return reply.send({ success: true });
   } catch (error) {
     if (error instanceof UnauthorizedError) {
       return reply.status(401).send({ message: error.message });
