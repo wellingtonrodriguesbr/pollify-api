@@ -45,7 +45,7 @@ model Poll {
   updatedAt DateTime @default(now()) @map("updated_at")
   userId    String   @map("user_id")
 
-  user    User         @relation(fields: [userId], references: [id])
+  user    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   options PollOption[]
   votes   Vote[]
 
@@ -58,7 +58,7 @@ model PollOption {
   pollId String @map("poll_id")
 
   votes Vote[]
-  poll  Poll   @relation(fields: [pollId], references: [id])
+  poll  Poll   @relation(fields: [pollId], references: [id], onDelete: Cascade)
 
   @@map("poll_options")
 }
@@ -70,8 +70,8 @@ model Vote {
   pollId       String   @map("poll_id")
   createdAt    DateTime @default(now()) @map("created_at")
 
-  option PollOption @relation(fields: [pollOptionId], references: [id])
-  poll   Poll       @relation(fields: [pollId], references: [id])
+  option PollOption @relation(fields: [pollOptionId], references: [id], onDelete: Cascade)
+  poll   Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
 
   @@unique([sessionId, pollId])
   @@map("votes")
