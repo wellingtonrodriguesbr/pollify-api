@@ -17,7 +17,7 @@ export async function signOutController(
       {
         sign: {
           sub: req.user.sub,
-          expiresIn: 3,
+          expiresIn: 1,
         },
       }
     );
